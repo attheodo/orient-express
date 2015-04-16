@@ -1,0 +1,16 @@
+{
+    "server": {
+        "port": 4000
+    },
+
+    "logging": {
+        "express": {
+            "console": {
+                "level": "debug",
+                "colorize": true,
+                "label": "express"
+            }
+        }
+
+    }
+}

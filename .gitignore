@@ -1,0 +1,4 @@
+config/env/local.js
+node_modules
+bower_components
+.DS_STORE

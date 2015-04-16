@@ -1,0 +1,29 @@
+{
+  "name": "oregon-express",
+  "version": "0.0.1",
+  "description": "express.js application scaffolding",
+  "main": "app.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "scaffoling",
+    "express",
+    "node.js"
+  ],
+  "author": "attheodo",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^2.9.24",
+    "colors": "^1.0.3",
+    "express": "^4.12.3",
+    "hbs": "^3.0.1",
+    "lodash": "^3.6.0",
+    "nconf": "^0.7.1",
+    "sequelize": "^2.0.5",
+    "winston": "^1.0.0"
+  }
+}
