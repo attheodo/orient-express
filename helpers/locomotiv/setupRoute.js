@@ -54,7 +54,7 @@ module.exports = function(app, options) {
 
             handlerMethod = controllerMethods[handlerParts.action];
 
-            registerRoute(httpVerb, routePattern, middleware, handlerMethod, handlerParts.action);
+            registerRoute(httpVerb, routePattern, middleware, handlerMethod, handlerParts);
         }
 
     }
@@ -241,7 +241,7 @@ module.exports = function(app, options) {
 
     }
 
-    function registerRoute(verb, routePattern, middleware, routeHandler, action) {
+    function registerRoute(verb, routePattern, middleware, routeHandler, handlerParts) {
 
         if (middleware) {
 
@@ -254,10 +254,10 @@ module.exports = function(app, options) {
 
         if (options.verbose) {
             console.log(
-                '  ✓  '.green + 'Mapped route (' + 
+                '  ✓  '.green + 'Mapped route (' +
                 verb.toUpperCase().bold + ' '+ routePattern.bold +') from file "' +
                 options.routeName.underline+'.json"'.underline+' to controller "'+
-                controllerName.underline+'.js:'.underline+action.underline+'"'
+                handlerParts.controller.underline+'.js:'.underline+handlerParts.action.underline+'"'
                 );
         }
     }
