@@ -18,7 +18,7 @@ module.exports = function(app, options) {
     var uriPrefix = "";
 
     // holds the parsed configuration options for the routes
-    var config = loadRouteConfigFile();
+    var config = loadRouteConfigFile(configFilePath);
 
     // load global options
     setFileGlobalOptions();
@@ -63,16 +63,35 @@ module.exports = function(app, options) {
      * it into native objects
      *
     **/
-    function loadRouteConfigFile() {
+    function loadRouteConfigFile(file) {
 
         try {
-            return JSON.parse(stripJSONComments(fs.readFileSync(configFilePath, 'utf8')));
+            return JSON.parse(stripJSONComments(fs.readFileSync(file, 'utf8')));
         } catch(e) {
-            console.log('error'.red + '[Locomotiv] Cannot parse "' + configFilePath + '". Wrong syntax?');
+            console.log('error'.red + '[Locomotiv] Cannot parse "' + file + '". Wrong syntax?');
         }
 
     }
 
+    function loadControllerFile(file) {
+        try {
+            return require(file);
+        } catch(e) {
+            console.log('error: '.red + '[Locomotiv] Cannot find controller file: "'+file.underline+'"');
+            process.exit(-1);
+        }
+    }
+
+    function loadMiddlewareFile(file) {
+
+        try {
+            return require(file);
+        } catch(e) {
+            console.log('error: '.red + '[Locomotiv] Cannot find middleware file: "'+file.underline+'"');
+            process.exit(-1);
+        }
+
+    }
     /**
      * Overrides default route configuration options with the explicit options set
      * in the routes configuration file under the global property '*'
@@ -96,7 +115,7 @@ module.exports = function(app, options) {
             }
 
             if (g.hasOwnProperty('middlewaresPath')) {
-                baseMiddlewaresPath = path.join(options.processDir, g.middlewaresPath);
+                baseMiddlewarePath = path.join(options.processDir, g.middlewaresPath);
             }
 
             if (g.hasOwnProperty('middleware')) {
@@ -200,7 +219,7 @@ module.exports = function(app, options) {
         }
 
         var middlewareFile = getMiddlewarePath(mdlwrParts[0]);
-        var middleware = require(middlewareFile);
+        var middleware = loadMiddlewareFile(middlewareFile);
 
         // return the method reference
         return middleware[mdlwrParts[1]];
@@ -234,7 +253,12 @@ module.exports = function(app, options) {
         }
 
         if (options.verbose) {
-            console.log('  Mapped route (' + verb.toUpperCase() + ' '+ routePattern +') from file "'+options.routeName.underline+'.json"'.underline+' to controller "'+ controllerName.underline+'.js:'.underline+action.underline+'"');
+            console.log(
+                '  ✓  '.green + 'Mapped route (' + 
+                verb.toUpperCase().bold + ' '+ routePattern.bold +') from file "' +
+                options.routeName.underline+'.json"'.underline+' to controller "'+
+                controllerName.underline+'.js:'.underline+action.underline+'"'
+                );
         }
     }
 
