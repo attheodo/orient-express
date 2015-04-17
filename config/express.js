@@ -4,9 +4,10 @@ var hbs = require('hbs');
 var winston = require('winston');
 var nconf = require('nconf');
 
+
 var app = express();
 
-var routes = require('../routes')(app);
+var routes = require('../helpers/locomotiv/locomotiv.js')
 
 /* Load configuration files */
 nconf.argv().env()
@@ -27,5 +28,8 @@ app.set('winston-logger', winston.loggers.get('express'));
 /* Configure view engine and view containting directory */
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, '../views'));
+
+/* Setup routes */
+routes(app);
 
 module.exports = app;
