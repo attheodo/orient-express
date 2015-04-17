@@ -7,8 +7,7 @@
         "express": {
             "console": {
                 "level": "debug",
-                "colorize": true,
-                "label": "express"
+                "colorize": true
             }
         }
 
