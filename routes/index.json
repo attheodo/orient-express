@@ -2,7 +2,7 @@
 
     "/": {
         "GET": {
-            "handler": "index",
+            "handler": "IndexController:index",
             "middleware": [
                 "test:all"
             ]
