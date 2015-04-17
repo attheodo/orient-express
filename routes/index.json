@@ -1,0 +1,11 @@
+{
+
+    "/": {
+        "GET": {
+            "handler": "index",
+            "middleware": [
+                "test:all"
+            ]
+        }
+    }
+}
