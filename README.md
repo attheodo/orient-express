@@ -1,4 +1,5 @@
-### Orient: A project scaffold synonymous with comfort and intrigue
+### Orient-Express.js
+#### A project scaffold synonymous with comfort and intrigue
 
 
 <img align="right" height="260" src="http://atworks.gr/orient/logo.png">
