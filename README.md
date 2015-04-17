@@ -25,7 +25,7 @@ Orient-Express ships with **Locomotiv** which allows you to configure your route
 - Comments are supported in the `.json` configuration files. **Locomotiv** conveniently strips them out before parsing the JSON. 
 
 #### JSON Configuration File Example
-```
+```javascript
 /* FILE: routes/index.json */
 
 {
