@@ -1,7 +1,7 @@
 {
-  "name": "oregon-express",
+  "name": "orient-express",
   "version": "0.0.1",
-  "description": "express.js application scaffolding",
+  "description": "A project scaffold synonymous with comfort and intrigue.",
   "main": "app.js",
   "directories": {
     "test": "tests"
@@ -23,6 +23,7 @@
     "hbs": "^3.0.1",
     "lodash": "^3.6.0",
     "nconf": "^0.7.1",
+    "pretty-error": "^1.1.2",
     "sequelize": "^2.0.5",
     "strip-json-comments": "^1.0.2",
     "winston": "^1.0.0"
