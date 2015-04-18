@@ -38,6 +38,7 @@ pe.skipPackage('express');
 
 /* Load models */
 var diesel = require('../helpers/diesel')(app);
+
 diesel.init(function(err){
 	if (err) {
 		winston.loggers.get('express').error(err);
@@ -46,6 +47,7 @@ diesel.init(function(err){
 
 	app.set('models', diesel.models);
 	app.set('connections', diesel.connections);
+
 });
 
 /* Setup routes */
@@ -55,6 +57,5 @@ routes(app);
 var errorHandlers = require('./errorHandlers.js')(app);
 app.use(errorHandlers.internalError);
 app.use(errorHandlers.routeNotFound);
-
 
 module.exports = app;
