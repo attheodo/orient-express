@@ -5,14 +5,14 @@
 *   https://github.com/balderdashy/waterline
 */
 
-var async = require('async');
 var path  = require('path');
 var fs    = require('fs');
 
 var Waterline = require('waterline');
 var _ = require('lodash');
-var colors = require('colors');
+var Promise = require('bluebird');
 
+Promise.promisifyAll(fs);
 
 module.exports = function(app) {
 
@@ -23,34 +23,26 @@ module.exports = function(app) {
 
     var l = app.get('winston-logger');
 
-    var models = null;
-    var connections = null;
-
     var adapters = {};
 
-    function init(cb) {
+    function init() {
+        return new Promise(function(resolve) {
+            var modelsPath = path.resolve(path.dirname(require.main.filename) + config.modelsPath);
 
-        var modelsPath = path.resolve(path.dirname(require.main.filename) + config.modelsPath);
+            var waterline = new Waterline();
+            Promise.promisifyAll(waterline);
 
-        var waterline = new Waterline();
-
-        fs.readdir(modelsPath, function(err, files){
-
-            if (err) {
-                return cb('[Diesel] Error reading model definition files: '+ err);
-            }
-
-            if(v) {
+            if (v) {
                 l.info('[Diesel] Searching for model definition files in "'+modelsPath.underline+'"...');
             }
 
-            async.each(files, function(filename, callback) {
+            fs.readdirAsync(modelsPath).map(function(filename) {
 
                 var adapterModule = null;
                 var filePath = modelsPath + '/' + filename;
 
-                if(path.extname(filename) !== '.js') {
-                    return callback();
+                if (path.extname(filename) !== '.js') {
+                    return;
                 }
 
                 var model = require(filePath);
@@ -65,11 +57,11 @@ module.exports = function(app) {
 
                 // don't touch models if we're on production
                 if(!_.isUndefined(model.migrate) && process.env.NODE_ENV === 'production') {
-                    model.migrate = "safe";
+                    model.migrate = 'safe';
                 }
 
                 if(_.isUndefined(model.adapter) && _.isUndefined(config.waterline.connections[model.connection].adapter)) {
-                    return cb('[Diesel] There\'s no default adapter for connection "'+model.connection+'", nor an explicitly configured adapter in "'+model.identity+'.js"');
+                    throw new Error('[Diesel] There\'s no default adapter for connection "'+model.connection+'", nor an explicitly configured adapter in "'+model.identity+'.js"');
                 }
                 // give priority to the explicitly set adapter in model configuration file
                 else if (!_.isUndefined(model.adapter)) {
@@ -80,7 +72,7 @@ module.exports = function(app) {
                         adapters[model.adapter] = adapterModule;
 
                     } catch(e) {
-                        return cb('[Diesel] Connection adapter module "'+model.adapter+'" defined in "'+model.identity+'.js'+'" not found. Try \'npm install '+model.adapter+' --save\'');
+                        throw new Error('[Diesel] Connection adapter module "'+model.adapter+'" defined in "'+model.identity+'.js'+'" not found. Try \'npm install '+model.adapter+' --save\'');
                     }
 
                 }
@@ -93,7 +85,7 @@ module.exports = function(app) {
                         adapters[model.adapter] = adapterModule;
 
                     } catch(e) {
-                        return cb('[Diesel] Default Connection adapter module "'+adapter+'" for connection "'+model.connection+'" not found. Try \'npm install '+adapter+' --save\'');
+                        throw new Error('[Diesel] Default Connection adapter module "'+adapter+'" for connection "'+model.connection+'" not found. Try \'npm install '+adapter+' --save\'');
                     }
                 }
 
@@ -104,13 +96,7 @@ module.exports = function(app) {
                     l.info('  ✓'.green +'  Loaded model "'+model.identity.underline+'" with connection "'+model.adapter+':'+model.connection+'"');
                 }
 
-                callback();
-
-            }, function(err) {
-
-                if (err) {
-                    return cb('[Diesel] Error loading model:' + err);
-                }
+            }, {concurrency: 5}).then(function() {
 
                 config.waterline.adapters = adapters;
 
@@ -125,32 +111,25 @@ module.exports = function(app) {
                     } else {
                         config.waterline.defaults = {
                             migrate: config.migrate
-                        }
+                        };
                     }
                 }
 
-                waterline.initialize(config.waterline, function(err, data){
-
-                    if(err) {
-                        return cb(err);
-                    }
-
-                    models = data.collections;
-                    connections = data.connections;
-
-                    l.info('[Diesel] All models loaded');
-
-                    return cb();
-                })
-
+                return waterline.initializeAsync(config.waterline);
+            }).then(function(data) {
+                l.info('[Diesel] All models loaded');
+                resolve({models: data.collections, connections: data.connections});
+            }).catch(Error, function(err) {
+                if (err.code === 'ENOENT') {
+                    resolve({error: '[Diesel] Error reading model definition files: '+ err});
+                } else {
+                    resolve({error: err});
+                }
             });
-
         });
     }
 
     return {
-        models: models,
-        connections: connections,
         init: init
-    }
-}
+    };
+};
