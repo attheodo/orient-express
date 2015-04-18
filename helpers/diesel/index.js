@@ -80,7 +80,7 @@ module.exports = function(app) {
                         adapters[model.adapter] = adapterModule;
 
                     } catch(e) {
-                        return cb('[Diesel] Connection adapter module "'+model.adapter+'" defined in "'+model.identity+'.js'+'" not found. Try \'npm install '+model.adapter+'-- save\'');
+                        return cb('[Diesel] Connection adapter module "'+model.adapter+'" defined in "'+model.identity+'.js'+'" not found. Try \'npm install '+model.adapter+' --save\'');
                     }
 
                 }
@@ -93,7 +93,7 @@ module.exports = function(app) {
                         adapters[model.adapter] = adapterModule;
 
                     } catch(e) {
-                        return cb('[Diesel] Default Connection adapter module "'+adapter+'" for connection "'+model.connection+'" not found. Try \'npm install '+adapter+'-- save\'');
+                        return cb('[Diesel] Default Connection adapter module "'+adapter+'" for connection "'+model.connection+'" not found. Try \'npm install '+adapter+' --save\'');
                     }
                 }
 
@@ -101,7 +101,7 @@ module.exports = function(app) {
                 waterline.loadCollection(collection);
 
                 if (v) {
-                    l.info('  ✓  Loaded model "'+model.identity.underline+'" with connection "'+model.adapter+':'+model.connection+'"');
+                    l.info('  ✓'.green +'  Loaded model "'+model.identity.underline+'" with connection "'+model.adapter+':'+model.connection+'"');
                 }
 
                 callback();

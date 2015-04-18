@@ -15,6 +15,7 @@ var setupRoute = require('./setupRoute');
 **/
 module.exports = function(app, userOptions) {
 
+    var l = app.get('winston-logger');
 
     // default options
     var options = {
@@ -42,7 +43,7 @@ module.exports = function(app, userOptions) {
     });
 
     if(options.verbose) {
-        console.log('\ninfo: '.green +'[Locomotiv] Assembling wagons...');
+        l.info('[Locomotiv] Assembling wagons...');
     }
 
     jsonFiles.forEach(function (file){
@@ -56,7 +57,7 @@ module.exports = function(app, userOptions) {
     });
 
     if(options.verbose) {
-        console.log('info: '.green +'[Locomotiv] Wagons attached.\n');
+        l.info('[Locomotiv] Wagons attached.\n');
     }
 
 
