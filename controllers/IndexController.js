@@ -3,6 +3,5 @@ module.exports = {
 }
 
 function indexHandler(req, res, next) {
-    //winston.info("skata");
-    res.send(200);
+    res.sendStatus(200);
 }
