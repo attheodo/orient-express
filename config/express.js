@@ -9,8 +9,7 @@ var PrettyError = require('pretty-error');
 
 var app = express();
 
-var routes = require('../helpers/locomotiv/locomotiv.js');
-
+var routes = require('../helpers/locomotiv');
 
 /* Load configuration files */
 nconf.argv().env()
@@ -36,6 +35,15 @@ app.set('views', path.join(__dirname, '../views'));
 pe = new PrettyError().start();
 pe.skipNodeFiles();
 pe.skipPackage('express');
+
+/* Load models */
+var diesel = require('../helpers/diesel')(app);
+diesel.init(function(err){
+	if (err) {
+		winston.loggers.get('express').error(err);
+		process.exit(-1);
+	}
+});
 
 /* Setup routes */
 routes(app);

@@ -4,10 +4,33 @@
     },
 
     "logging": {
+
         "express": {
             "console": {
                 "level": "debug",
                 "colorize": true
+            }
+        }
+
+    },
+
+    "diesel": {
+
+        "modelsPath": "/models",
+
+        "migrate": "drop",
+
+        "verbose": true,
+
+        "waterline": {
+            "connections": {
+                "defaultDatabase": {
+                    "adapter": "sails-postgresql",
+                    "host": "localhost",
+                    "user": "attheodo",
+                    "password": "",
+                    "database": ""
+                }
             }
         }
 
