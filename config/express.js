@@ -1,11 +1,10 @@
-/* jshint global hbs, pe */
 var express = require('express');
 var path = require('path');
 
-var hbs = require('hbs');
 var winston = require('winston');
 var nconf = require('nconf');
 var PrettyError = require('pretty-error');
+var Promise = require('bluebird');
 
 var app = express();
 
@@ -32,30 +31,42 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, '../views'));
 
 /* Configure pretty-error */
-pe = new PrettyError().start();
+var pe = new PrettyError();
+pe.start();
 pe.skipNodeFiles();
 pe.skipPackage('express');
-
-/* Load models */
-var diesel = require('../helpers/diesel')(app);
-
-diesel.init(function(err){
-	if (err) {
-		winston.loggers.get('express').error(err);
-		process.exit(-1);
-	}
-
-	app.set('models', diesel.models);
-	app.set('connections', diesel.connections);
-
-});
-
-/* Setup routes */
-routes(app);
 
 /* Register error handlers */
 var errorHandlers = require('./errorHandlers.js')(app);
 app.use(errorHandlers.internalError);
 app.use(errorHandlers.routeNotFound);
 
-module.exports = app;
+function setup() {
+	return new Promise(function(resolve) {
+		/* Load models */
+		var diesel = require('../helpers/diesel')(app);
+
+		diesel.init().then(function(data) {
+			if (data.error) {
+				winston.loggers.get('express').error(data.error);
+				process.exit(-1);
+			} else {
+				app.set('models', data.models);
+				app.set('connections', data.connections);
+			}
+
+			/* Setup routes */
+			routes(app);
+
+			/* to-do: bootstrap */
+			//call bootstrap helper
+
+			resolve();
+		});
+	});
+}
+
+module.exports =  {
+	app: app,
+	setup: setup
+};
