@@ -43,6 +43,9 @@ diesel.init(function(err){
 		winston.loggers.get('express').error(err);
 		process.exit(-1);
 	}
+
+	app.set('models', diesel.models);
+	app.set('connections', diesel.connections);
 });
 
 /* Setup routes */
