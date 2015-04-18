@@ -138,6 +138,8 @@ module.exports = function(app) {
                     models = data.collections;
                     connections = data.connections;
 
+                    l.info('[Diesel] All models loaded');
+
                     return cb();
                 })
 
