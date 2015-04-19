@@ -10,9 +10,9 @@ var fs    = require('fs');
 
 var Waterline = require('waterline');
 var _ = require('lodash');
-var Promise = require('bluebird');
+var BPromise = require('bluebird');
 
-Promise.promisifyAll(fs);
+BPromise.promisifyAll(fs);
 
 module.exports = function(app) {
 
@@ -26,11 +26,11 @@ module.exports = function(app) {
     var adapters = {};
 
     function init() {
-        return new Promise(function(resolve, reject) {
+        return new BPromise(function(resolve, reject) {
             var modelsPath = path.resolve(path.dirname(require.main.filename) + config.modelsPath);
 
             var waterline = new Waterline();
-            Promise.promisifyAll(waterline);
+            BPromise.promisifyAll(waterline);
 
             if (v) {
                 l.info('[Diesel] Searching for model definition files in "'+modelsPath.underline+'"...');

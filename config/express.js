@@ -4,7 +4,7 @@ var path = require('path');
 var winston = require('winston');
 var nconf = require('nconf');
 var PrettyError = require('pretty-error');
-var Promise = require('bluebird');
+var BPromise = require('bluebird');
 
 var app = express();
 
@@ -37,7 +37,8 @@ pe.skipNodeFiles();
 pe.skipPackage('express');
 
 function setup() {
-	return new Promise(function(resolve) {
+
+	return new BPromise(function(resolve) {
 		/* Load models */
 		var diesel = require('../helpers/diesel')(app);
 
