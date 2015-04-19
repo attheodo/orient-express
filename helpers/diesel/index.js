@@ -26,7 +26,7 @@ module.exports = function(app) {
     var adapters = {};
 
     function init() {
-        return new Promise(function(resolve) {
+        return new Promise(function(resolve, reject) {
             var modelsPath = path.resolve(path.dirname(require.main.filename) + config.modelsPath);
 
             var waterline = new Waterline();
@@ -121,9 +121,9 @@ module.exports = function(app) {
                 resolve({models: data.collections, connections: data.connections});
             }).catch(Error, function(err) {
                 if (err.code === 'ENOENT') {
-                    resolve({error: '[Diesel] Error reading model definition files: '+ err});
+                    reject('[Diesel] Error reading model definition files: '+ err);
                 } else {
-                    resolve({error: err});
+                    reject(err);
                 }
             });
         });

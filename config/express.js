@@ -36,32 +36,27 @@ pe.start();
 pe.skipNodeFiles();
 pe.skipPackage('express');
 
-/* Register error handlers */
-var errorHandlers = require('./errorHandlers.js')(app);
-app.use(errorHandlers.internalError);
-app.use(errorHandlers.routeNotFound);
-
 function setup() {
 	return new Promise(function(resolve) {
 		/* Load models */
 		var diesel = require('../helpers/diesel')(app);
 
 		diesel.init().then(function(data) {
-			if (data.error) {
-				winston.loggers.get('express').error(data.error);
-				process.exit(-1);
-			} else {
-				app.set('models', data.models);
-				app.set('connections', data.connections);
-			}
+			app.set('models', data.models);
+			app.set('connections', data.connections);
 
 			/* Setup routes */
 			routes(app);
 
-			/* to-do: bootstrap */
-			//call bootstrap helper
+			/* Register error handlers */
+			var errorHandlers = require('./errorHandlers.js')(app);
+			app.use(errorHandlers.internalError);
+			app.use(errorHandlers.routeNotFound);
 
 			resolve();
+		}).catch(function(err) {
+			winston.loggers.get('express').error(err);
+			process.exit(-1);
 		});
 	});
 }
