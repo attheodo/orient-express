@@ -7,11 +7,19 @@
 
         "express": {
             "console": {
-                "level": "debug",
+                "level"   : "debug",
                 "colorize": true
             }
         }
 
+    },
+
+    "locomotiv": {
+        "routesPath"      : "./routes",
+        "controllersPath" : "./controllers",
+        "middlewarePath"  : "./middlewares",
+        "defaultAction"   : "index",
+        "verbose"         : true
     },
 
     "diesel": {
@@ -25,9 +33,9 @@
         "waterline": {
             "connections": {
                 "defaultDatabase": {
-                    "adapter": "sails-postgresql",
-                    "host": "localhost",
-                    "user": "attheodo",
+                    "adapter" : "sails-postgresql",
+                    "host"    : "localhost",
+                    "user"    : "attheodo",
                     "password": "",
                     "database": ""
                 }

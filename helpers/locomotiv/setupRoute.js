@@ -17,7 +17,7 @@ module.exports = function(app, options) {
     var baseMiddlewarePath = options.baseMiddlewarePath;
     var controllerName = options.routeName.charAt(0).toUpperCase() + options.routeName.slice(1) + 'Controller';
     var globalMiddleware = [];
-    var uriPrefix = "";
+    var uriPrefix = '';
 
     // holds the parsed configuration options for the routes
     var config = loadRouteConfigFile(configFilePath);
@@ -25,7 +25,7 @@ module.exports = function(app, options) {
     // load global options
     setFileGlobalOptions();
 
-    for (uri in config) {
+    for (var uri in config) {
         parseRoute(uri);
     }
 
@@ -108,16 +108,16 @@ module.exports = function(app, options) {
 
             var g = config['*'];
 
-            if (g.hasOwnProperty('controllersPath')) {
-                baseControllerPath = path.join(options.processDir, g.controllersPath);
+            if (g.hasOwnProperty('controllerPath')) {
+                baseControllerPath = path.join(options.processDir, g.controllerPath);
             }
 
             if (g.hasOwnProperty('controllerName')) {
                 controllerName = g.controllerName;
             }
 
-            if (g.hasOwnProperty('middlewaresPath')) {
-                baseMiddlewarePath = path.join(options.processDir, g.middlewaresPath);
+            if (g.hasOwnProperty('middlewarePath')) {
+                baseMiddlewarePath = path.join(options.processDir, g.middlewarePath);
             }
 
             if (g.hasOwnProperty('middleware')) {

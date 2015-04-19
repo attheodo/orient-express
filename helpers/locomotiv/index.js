@@ -16,16 +16,10 @@ module.exports = function(app, userOptions) {
 
     var l = app.get('winston-logger');
 
-    // default options
-    var options = {
-        routesPath      : './routes',
-        controllersPath : './controllers',
-        middlewarePath : './middlewares',
-        processDir      : process.cwd(),
-        defaultAction   : 'index',
-        verbose         : true
+    var config = app.get('nconf');
 
-    };
+    var options = config.get('locomotiv');
+    options.processDir = process.cwd();
 
     // Check if the user has passed custom options
     // and if yes, merge them with default options
