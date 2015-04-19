@@ -1,5 +1,5 @@
 /*
-*   Diesel fuels Orient-Express with models functionality using
+*   Tender attaches models to Orient-Express using
 *   the Waterline ORM
 *
 *   https://github.com/balderdashy/waterline
@@ -17,7 +17,7 @@ BPromise.promisifyAll(fs);
 module.exports = function(app) {
 
     var globalConfig = app.get('nconf');
-    var config = globalConfig.get('diesel');
+    var config = globalConfig.get('tender');
 
     var v = config.verbose;
 
@@ -33,7 +33,7 @@ module.exports = function(app) {
             BPromise.promisifyAll(waterline);
 
             if (v) {
-                l.info('[Diesel] Searching for model definition files in "'+modelsPath.underline+'"...');
+                l.info('[Tender] Searching for model definition files in "'+modelsPath.underline+'"...');
             }
 
             fs.readdirAsync(modelsPath).map(function(filename) {
@@ -61,7 +61,7 @@ module.exports = function(app) {
                 }
 
                 if(_.isUndefined(model.adapter) && _.isUndefined(config.waterline.connections[model.connection].adapter)) {
-                    throw new Error('[Diesel] There\'s no default adapter for connection "'+model.connection+'", nor an explicitly configured adapter in "'+model.identity+'.js"');
+                    throw new Error('[Tender] There\'s no default adapter for connection "'+model.connection+'", nor an explicitly configured adapter in "'+model.identity+'.js"');
                 }
                 // give priority to the explicitly set adapter in model configuration file
                 else if (!_.isUndefined(model.adapter)) {
@@ -72,7 +72,7 @@ module.exports = function(app) {
                         adapters[model.adapter] = adapterModule;
 
                     } catch(e) {
-                        throw new Error('[Diesel] Connection adapter module "'+model.adapter+'" defined in "'+model.identity+'.js'+'" not found. Try \'npm install '+model.adapter+' --save\'');
+                        throw new Error('[Tender] Connection adapter module "'+model.adapter+'" defined in "'+model.identity+'.js'+'" not found. Try \'npm install '+model.adapter+' --save\'');
                     }
 
                 }
@@ -85,7 +85,7 @@ module.exports = function(app) {
                         adapters[model.adapter] = adapterModule;
 
                     } catch(e) {
-                        throw new Error('[Diesel] Default Connection adapter module "'+adapter+'" for connection "'+model.connection+'" not found. Try \'npm install '+adapter+' --save\'');
+                        throw new Error('[Tender] Default Connection adapter module "'+adapter+'" for connection "'+model.connection+'" not found. Try \'npm install '+adapter+' --save\'');
                     }
                 }
 
@@ -101,7 +101,7 @@ module.exports = function(app) {
                 config.waterline.adapters = adapters;
 
                 if(_.isUndefined(config.migrate)) {
-                    l.warn('[Diesel] It appears you\'ve not set a model migration setting in your global configuration file. Assuming "migrate": "safe".');
+                    l.warn('[Tender] It appears you\'ve not set a model migration setting in your global configuration file. Assuming "migrate": "safe".');
                     config.migrate = 'safe';
                 } else {
 
@@ -117,11 +117,11 @@ module.exports = function(app) {
 
                 return waterline.initializeAsync(config.waterline);
             }).then(function(data) {
-                l.info('[Diesel] All models loaded');
+                l.info('[Tender] All models loaded');
                 resolve({models: data.collections, connections: data.connections});
             }).catch(Error, function(err) {
                 if (err.code === 'ENOENT') {
-                    reject('[Diesel] Error reading model definition files: '+ err);
+                    reject('[Tender] Error reading model definition files: '+ err);
                 } else {
                     reject(err);
                 }

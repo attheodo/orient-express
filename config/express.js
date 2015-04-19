@@ -40,9 +40,9 @@ function setup() {
 
 	return new BPromise(function(resolve) {
 		/* Load models */
-		var diesel = require('../helpers/diesel')(app);
+		var tender = require('../helpers/tender')(app);
 
-		diesel.init().then(function(data) {
+		tender.init().then(function(data) {
 			app.set('models', data.models);
 			app.set('connections', data.connections);
 

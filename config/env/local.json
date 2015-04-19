@@ -22,7 +22,7 @@
         "verbose"         : true
     },
 
-    "diesel": {
+    "tender": {
 
         "modelsPath": "/models",
 
