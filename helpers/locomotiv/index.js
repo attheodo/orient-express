@@ -35,10 +35,6 @@ module.exports = function(app, userOptions) {
         return path.extname(f) === '.json';
     });
 
-    if(options.verbose) {
-        l.info('[Locomotiv] Assembling wagons...');
-    }
-
     jsonFiles.forEach(function (file){
 
         options.routeName           = file.split('.')[0];
@@ -48,10 +44,6 @@ module.exports = function(app, userOptions) {
 
         setupRoute(app, options);
     });
-
-    if(options.verbose) {
-        l.info('[Locomotiv] Wagons attached.\n');
-    }
 
 
 };

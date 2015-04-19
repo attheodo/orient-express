@@ -93,7 +93,7 @@ module.exports = function(app) {
                 waterline.loadCollection(collection);
 
                 if (v) {
-                    l.info('  ✓'.green +'  Loaded model "'+model.identity.underline+'" with connection "'+model.adapter+':'+model.connection+'"');
+                    l.info('[Tender]'+' ✓'.green +'  Loaded model "'+model.identity.underline+'" with connection "'+model.adapter+':'+model.connection+'"');
                 }
 
             }, {concurrency: 5}).then(function() {
@@ -117,7 +117,6 @@ module.exports = function(app) {
 
                 return waterline.initializeAsync(config.waterline);
             }).then(function(data) {
-                l.info('[Tender] All models loaded');
                 resolve({models: data.collections, connections: data.connections});
             }).catch(Error, function(err) {
                 if (err.code === 'ENOENT') {

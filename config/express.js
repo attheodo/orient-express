@@ -5,6 +5,7 @@ var winston = require('winston');
 var nconf = require('nconf');
 var PrettyError = require('pretty-error');
 var BPromise = require('bluebird');
+var colors = require('colors');
 
 var app = express();
 
@@ -35,6 +36,10 @@ var pe = new PrettyError();
 pe.start();
 pe.skipNodeFiles();
 pe.skipPackage('express');
+
+if(process.env.NODE_ENV !== 'production'){
+	console.log('\n[ORIENT-EXPRESS]'.bold.white + ' - Starting up the train...\n');
+}
 
 function setup() {
 

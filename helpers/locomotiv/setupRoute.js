@@ -255,7 +255,7 @@ module.exports = function(app, options) {
         }
 
         if (options.verbose) {
-            l.info(
+            l.info('[Locomotive]'+
                 '  ✓  '.green + 'Mapped route (' +
                 verb.toUpperCase().bold + ' '+ routePattern.bold +') from file "' +
                 options.routeName.underline+'.json"'.underline+' to controller "'+
