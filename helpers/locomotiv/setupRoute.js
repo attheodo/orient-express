@@ -10,12 +10,14 @@ var stripJSONComments = require('strip-json-comments');
 
 module.exports = function(app, options) {
 
+    var l = app.get('winston-logger');
+
     var configFilePath = path.join(options.baseRoutesPath, options.routeName + '.json');
     var baseControllerPath = options.baseControllerPath;
     var baseMiddlewarePath = options.baseMiddlewarePath;
     var controllerName = options.routeName.charAt(0).toUpperCase() + options.routeName.slice(1) + 'Controller';
     var globalMiddleware = [];
-    var uriPrefix = "";
+    var uriPrefix = '';
 
     // holds the parsed configuration options for the routes
     var config = loadRouteConfigFile(configFilePath);
@@ -23,7 +25,7 @@ module.exports = function(app, options) {
     // load global options
     setFileGlobalOptions();
 
-    for (uri in config) {
+    for (var uri in config) {
         parseRoute(uri);
     }
 
@@ -68,7 +70,7 @@ module.exports = function(app, options) {
         try {
             return JSON.parse(stripJSONComments(fs.readFileSync(file, 'utf8')));
         } catch(e) {
-            console.log('error'.red + '[Locomotiv] Cannot parse "' + file + '". Wrong syntax?');
+            l.error('[Locomotiv] Cannot parse "' + file + '". Wrong syntax?');
         }
 
     }
@@ -77,7 +79,7 @@ module.exports = function(app, options) {
         try {
             return require(file);
         } catch(e) {
-            console.log('error: '.red + '[Locomotiv] Cannot find controller file: "'+file.underline+'"');
+            l.error('[Locomotiv] Cannot find controller file: "'+file.underline+'"');
             process.exit(-1);
         }
     }
@@ -87,7 +89,7 @@ module.exports = function(app, options) {
         try {
             return require(file);
         } catch(e) {
-            console.log('error: '.red + '[Locomotiv] Cannot find middleware file: "'+file.underline+'"');
+            l.error('[Locomotiv] Cannot find middleware file: "'+file.underline+'"');
             process.exit(-1);
         }
 
@@ -106,16 +108,16 @@ module.exports = function(app, options) {
 
             var g = config['*'];
 
-            if (g.hasOwnProperty('controllersPath')) {
-                baseControllerPath = path.join(options.processDir, g.controllersPath);
+            if (g.hasOwnProperty('controllerPath')) {
+                baseControllerPath = path.join(options.processDir, g.controllerPath);
             }
 
             if (g.hasOwnProperty('controllerName')) {
                 controllerName = g.controllerName;
             }
 
-            if (g.hasOwnProperty('middlewaresPath')) {
-                baseMiddlewarePath = path.join(options.processDir, g.middlewaresPath);
+            if (g.hasOwnProperty('middlewarePath')) {
+                baseMiddlewarePath = path.join(options.processDir, g.middlewarePath);
             }
 
             if (g.hasOwnProperty('middleware')) {
@@ -214,7 +216,7 @@ module.exports = function(app, options) {
         var mdlwrParts = mdlwr.split('.');
 
         if (mdlwrParts.length !== 2) {
-            console.log('[!] Locomotive ERROR: Malformed middleware declaration "'+ mdlwr +'"');
+            l.error('[Locomotive] Malformed middleware declaration "'+ mdlwr +'"');
             return;
         }
 
@@ -253,7 +255,7 @@ module.exports = function(app, options) {
         }
 
         if (options.verbose) {
-            console.log(
+            l.info('[Locomotive]'+
                 '  ✓  '.green + 'Mapped route (' +
                 verb.toUpperCase().bold + ' '+ routePattern.bold +') from file "' +
                 options.routeName.underline+'.json"'.underline+' to controller "'+

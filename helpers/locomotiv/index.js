@@ -2,7 +2,6 @@ var fs = require('fs');
 var path = require('path');
 
 var _ = require('lodash');
-var colors = require('colors');
 
 var setupRoute = require('./setupRoute');
 
@@ -15,17 +14,12 @@ var setupRoute = require('./setupRoute');
 **/
 module.exports = function(app, userOptions) {
 
+    var l = app.get('winston-logger');
 
-    // default options
-    var options = {
-        routesPath      : './routes',
-        controllersPath : './controllers',
-        middlewarePath : './middlewares',
-        processDir      : process.cwd(),
-        defaultAction   : 'index',
-        verbose         : true
+    var config = app.get('nconf');
 
-    };
+    var options = config.get('locomotiv');
+    options.processDir = process.cwd();
 
     // Check if the user has passed custom options
     // and if yes, merge them with default options
@@ -41,10 +35,6 @@ module.exports = function(app, userOptions) {
         return path.extname(f) === '.json';
     });
 
-    if(options.verbose) {
-        console.log('\ninfo: '.green +'[Locomotiv] Assembling wagons...');
-    }
-
     jsonFiles.forEach(function (file){
 
         options.routeName           = file.split('.')[0];
@@ -54,10 +44,6 @@ module.exports = function(app, userOptions) {
 
         setupRoute(app, options);
     });
-
-    if(options.verbose) {
-        console.log('info: '.green +'[Locomotiv] Wagons attached.\n');
-    }
 
 
 };

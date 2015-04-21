@@ -1,11 +1,11 @@
-/* jshint global hbs, pe */
 var express = require('express');
 var path = require('path');
 
-var hbs = require('hbs');
 var winston = require('winston');
 var nconf = require('nconf');
 var PrettyError = require('pretty-error');
+var BPromise = require('bluebird');
+var colors = require('colors');
 
 var app = express();
 
@@ -32,30 +32,42 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, '../views'));
 
 /* Configure pretty-error */
-pe = new PrettyError().start();
+var pe = new PrettyError();
+pe.start();
 pe.skipNodeFiles();
 pe.skipPackage('express');
 
-/* Load models */
-var diesel = require('../helpers/diesel')(app);
+if(process.env.NODE_ENV !== 'production'){
+	console.log('\n[ORIENT-EXPRESS]'.bold.white + ' - Starting up the train...\n');
+}
 
-diesel.init(function(err){
-	if (err) {
-		winston.loggers.get('express').error(err);
-		process.exit(-1);
-	}
+function setup() {
 
-	app.set('models', diesel.models);
-	app.set('connections', diesel.connections);
+	return new BPromise(function(resolve) {
+		/* Load models */
+		var tender = require('../helpers/tender')(app);
 
-});
+		tender.init().then(function(data) {
+			app.set('models', data.models);
+			app.set('connections', data.connections);
 
-/* Setup routes */
-routes(app);
+			/* Setup routes */
+			routes(app);
 
-/* Register error handlers */
-var errorHandlers = require('./errorHandlers.js')(app);
-app.use(errorHandlers.internalError);
-app.use(errorHandlers.routeNotFound);
+			/* Register error handlers */
+			var errorHandlers = require('./errorHandlers.js')(app);
+			app.use(errorHandlers.internalError);
+			app.use(errorHandlers.routeNotFound);
 
-module.exports = app;
+			resolve();
+		}).catch(function(err) {
+			winston.loggers.get('express').error(err);
+			process.exit(-1);
+		});
+	});
+}
+
+module.exports =  {
+	app: app,
+	setup: setup
+};
