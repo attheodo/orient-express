@@ -163,3 +163,4 @@ Orient-Express uses the [Waterline ORM](https://github.com/balderdashy/waterline
 		- `drop` wipes/drops all the data and rebuilds the model everytime you start Orient-Express.
 	- `waterline.connections` which tells Waterline which are the available database connection options, which adapters for the datastore service they should use and which are the access credentials.
 	- `verbose` a boolean flag that defines whether **Tender** should output verbose logs related to the model loading procedure.
+	- `exposeGlobally` a boolean flag that defined whether **Tender** will expose your models globally.
