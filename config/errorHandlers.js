@@ -26,20 +26,19 @@ module.exports = function(app) {
         internalError: function (err, req, res, next) {
 
             var statusCode = err.status || 500;
-            var errorDetails = ''
-
+            var errorDetails = '';
             res.status(statusCode);
 
             if (process.env.NODE_ENV === 'development') {
 
-                errorDetails = err.stack;
-                l.error(statusCode + err.stack);
+                errorDetails = err;
+                l.error(err);
 
             }
 
             if (req.accepts('html')) {
 
-                res.render('errors/500', { url: req.url });
+                res.render('errors/500', { url: req.url , error: errorDetails });
 
             } else if (req.accepts('json')) {
 
