@@ -154,8 +154,10 @@ function sanitizeModelConfiguration(config, adapters, filename, model) {
       try {
 
           var adapter = config.waterline.connections[model.connection].adapter;
+          model.adapter = adapter;
+          
           adapterModule = require(adapter);
-          adapters[model.adapter] = adapterModule;
+          adapters[adapter] = adapterModule;
 
       } catch(e) {
           throw new Error('[Tender] Default Connection adapter module "' +
