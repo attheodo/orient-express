@@ -1,5 +1,6 @@
 module.exports = {
-    adapter: "sails-postgresql",
+
+    adapter: 'sails-postgresql',
 
     attributes: {
         email: {
