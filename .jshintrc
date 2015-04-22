@@ -10,7 +10,7 @@
 
 
   // Enforce tab width of 2 spaces.
-  "indent": 2,
+  "indent": 4,
 
   // Enforce use of single quotation marks for strings.
   "quotmark": "single",
