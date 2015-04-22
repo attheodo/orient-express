@@ -41,31 +41,27 @@ if(process.env.NODE_ENV !== 'production'){
 	console.log('\n[ORIENT-EXPRESS]'.bold.white + ' - Starting up the train...\n');
 }
 
-function setup() {
+var setup = BPromise.method(function(){
 
-	return new BPromise(function(resolve) {
-		/* Load models */
-		var tender = require('../helpers/tender')(app);
+	/* Load models */
+	var tender = require('../helpers/tender')(app);
 
-		tender.init().then(function(data) {
-			app.set('models', data.models);
-			app.set('connections', data.connections);
+	return tender.init().then(function(data) {
+		app.set('models', data.models);
+		app.set('connections', data.connections);
 
-			/* Setup routes */
-			routes(app);
+		/* Setup routes */
+		routes(app);
 
-			/* Register error handlers */
-			var errorHandlers = require('./errorHandlers.js')(app);
-			app.use(errorHandlers.internalError);
-			app.use(errorHandlers.routeNotFound);
+		/* Register error handlers */
+		var errorHandlers = require('./errorHandlers.js')(app);
+		app.use(errorHandlers.internalError);
+		app.use(errorHandlers.routeNotFound);
 
-			resolve();
-		}).catch(function(err) {
-			winston.loggers.get('express').error(err);
-			process.exit(-1);
-		});
 	});
-}
+
+});
+
 
 module.exports =  {
 	app: app,
