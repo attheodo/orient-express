@@ -61,7 +61,9 @@ module.exports = function(app) {
                 }
 
                 if(_.isUndefined(model.adapter) && _.isUndefined(config.waterline.connections[model.connection].adapter)) {
-                    throw new Error('[Tender] There\'s no default adapter for connection "'+model.connection+'", nor an explicitly configured adapter in "'+model.identity+'.js"');
+                    throw new Error('[Tender] There\'s no default adapter for connection "' +
+                    model.connection+'", nor an explicitly configured adapter in "' +
+                    model.identity+'.js"');
                 }
                 // give priority to the explicitly set adapter in model configuration file
                 else if (!_.isUndefined(model.adapter)) {
@@ -72,7 +74,9 @@ module.exports = function(app) {
                         adapters[model.adapter] = adapterModule;
 
                     } catch(e) {
-                        throw new Error('[Tender] Connection adapter module "'+model.adapter+'" defined in "'+model.identity+'.js'+'" not found. Try \'npm install '+model.adapter+' --save\'');
+                        throw new Error('[Tender] Connection adapter module "'+model.adapter+
+                          '" defined in "'+model.identity+'.js'+'" not found. Try \'npm install ' +
+                          model.adapter+' --save\'');
                     }
 
                 }
@@ -85,7 +89,9 @@ module.exports = function(app) {
                         adapters[model.adapter] = adapterModule;
 
                     } catch(e) {
-                        throw new Error('[Tender] Default Connection adapter module "'+adapter+'" for connection "'+model.connection+'" not found. Try \'npm install '+adapter+' --save\'');
+                        throw new Error('[Tender] Default Connection adapter module "'
+                        +adapter+'" for connection "'+model.connection+
+                        '" not found. Try \'npm install '+adapter+' --save\'');
                     }
                 }
 
