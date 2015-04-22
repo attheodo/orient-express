@@ -88,6 +88,16 @@ module.exports = function(app) {
           })
           .then(function(data) {
 
+                if(config.exposeGlobally) {
+                    if(v) {
+                        l.info('[Tender] Exposing models to global...');
+                    }
+                    _.each(data.collections, function(collection, key){
+                    global[key] = collection;
+                  });
+                }
+
+
                 resolve({models: data.collections, connections: data.connections});
 
           })
@@ -155,7 +165,7 @@ function sanitizeModelConfiguration(config, adapters, filename, model) {
 
           var adapter = config.waterline.connections[model.connection].adapter;
           model.adapter = adapter;
-          
+
           adapterModule = require(adapter);
           adapters[adapter] = adapterModule;
 

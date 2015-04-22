@@ -28,6 +28,8 @@
 
         "migrate": "drop",
 
+        "exposeGlobally": true,
+
         "verbose": true,
 
         "waterline": {
