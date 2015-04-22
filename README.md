@@ -6,9 +6,12 @@
 
 #### Features
 - Runs on the fast track foundation laid down by Express.js
-- Focused on great conventions and best practices
-- Folder structure that makes sense
-- **Locomotiv:** Route declaration and handling for people with OCD
+- Focused on great conventions and best practices.
+- Folder structure that makes sense.
+- **Locomotiv:** Route declaration and handling for people with OCD.
+- **Tender:** Searches for model definitions and registers models using [Waterline ORM](https://github.com/balderdashy/waterline).
+- Frictionless configuration using `.json` files for each environment, and overrides from `env` or CLI arguments.
+- [Handlebars](http://handlebarsjs.com/) view engine for building semantic templates with no frustration.
 
 ## Quickstart
 ```
@@ -103,7 +106,10 @@ Orient-Express ships with **Locomotiv** which allows you to configure your route
 	- Change the default path of the middleware used by the routes declared in the file.
 	- **Apply middleware to ALL the routes declared in the file.**
 	- **Add a URI prefix to ALL the routes declared in the file.**
-- You define **file global configuration options** by adding a wildcard `"*"` property in your route declarations file. For Example:
+- You define **file global configuration options** by adding a wildcard `"*"` property in your route declarations file.
+
+For Example:
+
 ```javascript
 /* FILE: routes/index.json */
 
@@ -146,3 +152,14 @@ Orient-Express ships with **Locomotiv** which allows you to configure your route
 }
 
 ```
+
+## Models
+Orient-Express uses the [Waterline ORM](https://github.com/balderdashy/waterline) ([docs](https://github.com/balderdashy/waterline-docs)) for it's persistence layer. Model declaration loading and registration is facilitated by the **Tender** module.
+- **Tender** uses Orient-Express global configuration mechanism (`/config/env/*`, environment variables, cosnole arguments) to load generic options for Waterline such as:
+	- `modelsPath`, or where **Tender** should look to load your models.
+	- Your model migration strategy (`"migration": "safe"`).
+		- `safe` doesn't alter the models in the database in anyway. Best fit for `production` environment
+		- `alter` tries to auto-migrate columnds/fields while attempting to keep existing data (experimental).
+		- `drop` wipes/drops all the data and rebuilds the model everytime you start Orient-Express.
+	- `waterline.connections` which tells Waterline which are the available database connection options, which adapters for the datastore service they should use and which are the access credentials.
+	- `verbose` a boolean flag that defines whether **Tender** should output verbose logs related to the model loading procedure.
