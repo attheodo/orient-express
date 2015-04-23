@@ -130,6 +130,10 @@ function sanitizeModelConfiguration(config, adapters, filename, model) {
       model.identity = filename.split('.')[0];
   }
 
+  if (!_.isString(model.tableName)) {
+      model.tableName = filename.split('.')[0];
+  }
+
   if(!_.isString(model.connection)) {
       model.connection = 'defaultDatabase';
   }
