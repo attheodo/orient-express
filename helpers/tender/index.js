@@ -13,6 +13,7 @@ var fs    = require('fs');
 var Waterline = require('waterline');
 var _ = require('lodash');
 var BPromise = require('bluebird');
+var pluralize = require('pluralize');
 
 BPromise.promisifyAll(fs);
 
@@ -131,7 +132,11 @@ function sanitizeModelConfiguration(config, adapters, filename, model) {
   }
 
   if (!_.isString(model.tableName)) {
-      model.tableName = filename.split('.')[0];
+
+      var tablename = filename.split('.')[0];
+      tablename = tablename.charAt(0).toLowerCase() + tablename.slice(1);
+
+      model.tableName = pluralize(tablename);
   }
 
   if(!_.isString(model.connection)) {

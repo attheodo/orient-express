@@ -23,6 +23,7 @@
     "hbs": "^3.0.1",
     "lodash": "^3.6.0",
     "nconf": "^0.7.1",
+    "pluralize": "^1.1.2",
     "pretty-error": "^1.1.2",
     "sails-postgresql": "^0.10.14",
     "sequelize": "^2.0.5",
