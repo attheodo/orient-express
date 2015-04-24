@@ -32,7 +32,7 @@ module.exports = function(app) {
 
         return new BPromise(function(resolve, reject) {
 
-            var modelsPath = path.resolve(path.dirname(require.main.filename) + config.modelsPath);
+            var modelsPath = path.resolve(path.join(path.dirname(require.main.filename), config.modelsPath));
 
             var waterline = new Waterline();
             BPromise.promisifyAll(waterline);
