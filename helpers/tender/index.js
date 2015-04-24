@@ -93,8 +93,8 @@ module.exports = function(app) {
                     if(v) {
                         l.info('[Tender] Exposing models to global...');
                     }
-                    _.each(data.collections, function(collection, key){
-                    global[key] = collection;
+                    _.each(data.collections, function(collection){
+                    global[collection.globalName] = collection;
                   });
                 }
 
@@ -135,6 +135,8 @@ function sanitizeModelConfiguration(config, adapters, filename, model) {
 
       var tablename = filename.split('.')[0];
       tablename = tablename.charAt(0).toLowerCase() + tablename.slice(1);
+
+      model.globalName = tablename;
 
       model.tableName = pluralize(tablename);
   }
